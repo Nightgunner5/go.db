@@ -26,6 +26,7 @@ type Iterator interface {
 	Valid() bool
 	Next()
 	Value() BPlusValue
+	Key() BPlusKey
 }
 
 type iterator struct {
@@ -65,6 +66,10 @@ func (it *iterator) Next() {
 
 func (it *iterator) Value() BPlusValue {
 	return it.node.Children[it.index].ReadValue(it.values)
+}
+
+func (it *iterator) Key() BPlusKey {
+	return it.node.Keys[it.index]
 }
 
 func GetAll(nodes, values *os.File) Iterator {

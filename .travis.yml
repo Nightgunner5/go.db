@@ -1,2 +1,2 @@
 language: go
-script: go test . ./... -v -bench .
+script: go test ./... -v -bench .
