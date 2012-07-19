@@ -30,9 +30,10 @@ func Open(filename string) (*GoDB, error) {
 }
 
 type GoDB struct {
-	nodes  *os.File
-	values *os.File
-	mtx    sync.RWMutex
+	nodes   *os.File
+	values  *os.File
+	indices map[string]index
+	mtx     sync.RWMutex
 }
 
 // Closes the underlying os.File.
@@ -94,5 +95,12 @@ func (db *GoDB) First() Iterator {
 }
 
 func (db *GoDB) Insert(value M) K {
-	panic("TODO")
+	key := K(bplus.InsertAtEnd(db.nodes, db.values, encode(value)))
+
+	for field, idx := range db.indices {
+		idx.insert(key, value)
+	}
+
+	return key
 }
+

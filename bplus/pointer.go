@@ -133,7 +133,7 @@ func (pointer BPlusPointer) ReadValue(f *os.File) BPlusValue {
 	return value
 }
 
-// Pointers use little endian encoding. See below.
+// Pointers use little endian encoding.
 func SerializePointer(p BPlusPointer) []byte {
 	var b [8]byte
 	binary.LittleEndian.PutUint64(b[:], uint64(p))

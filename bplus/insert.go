@@ -34,6 +34,39 @@ func Insert(nodes, values *os.File, key BPlusKey, value BPlusValue) error {
 		return err
 	}
 	return loc.WriteNode(nodes, node)
+}
 
-	panic("TODO")
+func findNextKey(nodes *os.File) BPlusKey {
+	loc := RootPointer
+	node := loc.ReadNode(nodes)
+	if node == nil {
+		return 0
+	}
+	for {
+		index, next := 0, BPlusKey(0)
+		for i, key := node.Keys {
+			if key > next {
+				index = i
+				next = key
+			} else {
+				break
+			}
+		}
+
+		if node.IsLeaf() {
+			return next + 1
+		}
+
+		loc = node.Children[index]
+		node = loc.ReadNode(nodes)
+	}
+	panic("unreachable")
+}
+
+func InsertAtEnd(nodes, values *os.File, value BPlusValue) BPlusKey {
+	key := findNextKey(nodes)
+
+	Insert(nodes, values, key, value)
+
+	return key
 }
