@@ -44,7 +44,7 @@ func findNextKey(nodes *os.File) BPlusKey {
 	}
 	for {
 		index, next := 0, BPlusKey(0)
-		for i, key := node.Keys {
+		for i, key := range node.Keys {
 			if key > next {
 				index = i
 				next = key
