@@ -1,3 +1,4 @@
+// A frontend to GoDB following the lead of the NoSQL movement.
 package godb
 
 import (
@@ -8,8 +9,10 @@ import (
 	"sync"
 )
 
-// Shortcut for less ugly code
+// The value type used by GoDB
 type M map[string]interface{}
+
+// The key type used by GoDB
 type K bplus.BPlusKey
 
 func Open(filename string) (*GoDB, error) {
@@ -70,12 +73,12 @@ func encode(val M) bplus.BPlusValue {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
 
-	encoder.Encode(m)
-	encoder.Close()
+	encoder.Encode(val)
 
 	return bplus.BPlusValue(buf.Bytes())
 }
 
+// Returns the value for the given key, or nil if the key does not appear in the database.
 func (db *GoDB) Get(key K) M {
 	db.mtx.RLock()
 	defer db.mtx.RUnlock()
@@ -85,8 +88,9 @@ func (db *GoDB) Get(key K) M {
 	return decode(val)
 }
 
+// Returns an Iterator pointing to the first value in the data set.
 func (db *GoDB) First() Iterator {
-	return &iterator{btree.GetAll(db.nodes, db.values)}
+	return &iterator{bplus.GetAll(db.nodes, db.values), db}
 }
 
 func (db *GoDB) Insert(value M) K {
