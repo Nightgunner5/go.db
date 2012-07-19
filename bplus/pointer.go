@@ -222,6 +222,22 @@ func (node *BPlusNode) FindKey(key BPlusKey) BPlusPointer {
 	return node.Next
 }
 
+func (node *BPlusNode) GetValue(values *os.File, key BPlusKey) BPlusValue {
+	if !node.IsLeaf() {
+		return nil
+	}
+
+	for i, k := range node.Keys {
+		if k == key {
+			return node.Children[i].ReadValue(values)
+		}
+		if k < key {
+			return nil
+		}
+	}
+	return nil
+}
+
 type BPlusValue []byte
 
 func (value BPlusValue) Save(values *os.File) BPlusPointer {
@@ -236,4 +252,18 @@ func (value BPlusValue) Save(values *os.File) BPlusPointer {
 	values.Write(value)
 
 	return BPlusPointer(pointer) + ValueModulo
+}
+
+func (value BPlusValue) Equal(other BPlusValue) bool {
+	if len(value) != len(other) {
+		return false
+	}
+
+	for i := 0; i < len(value); i++ {
+		if value[i] != other[i] {
+			return false
+		}
+	}
+
+	return true
 }
