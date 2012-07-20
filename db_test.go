@@ -129,3 +129,17 @@ func BenchmarkFindWithIndex(b *testing.B) {
 	}
 }
 
+func BenchmarkStringIndexCreate(b *testing.B) {
+	b.StopTimer()
+	db, f := makeDB()
+	defer cleanupDB(db, f)
+
+	insertFindTestingData(db)
+
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		db.IndexString("a")
+	}
+}
+
