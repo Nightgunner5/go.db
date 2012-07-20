@@ -9,8 +9,7 @@ TODO:
 
 - Implement Delete
 - Implement Update
-- Implement Search
-- Implement indexes
+- Implement more index types
 - Library interface
 - `database/sql/driver` interface
 

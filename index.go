@@ -135,4 +135,5 @@ func (db *GoDB) IndexString(field string) {
 	for it := db.First(); it.Valid(); it.Next() {
 		idx.insert(it.Key(), it.Value())
 	}
+	db.indices[field] = idx
 }

@@ -40,7 +40,7 @@ func findNextKey(nodes *os.File) BPlusKey {
 	loc := RootPointer
 	node := loc.ReadNode(nodes)
 	if node == nil {
-		return 0
+		return 1
 	}
 	for {
 		index, next := 0, BPlusKey(0)
@@ -48,8 +48,6 @@ func findNextKey(nodes *os.File) BPlusKey {
 			if key > next {
 				index = i
 				next = key
-			} else {
-				break
 			}
 		}
 
@@ -66,7 +64,10 @@ func findNextKey(nodes *os.File) BPlusKey {
 func InsertAtEnd(nodes, values *os.File, value BPlusValue) BPlusKey {
 	key := findNextKey(nodes)
 
-	Insert(nodes, values, key, value)
+	err := Insert(nodes, values, key, value)
+	if err != nil {
+		panic(err)
+	}
 
 	return key
 }
