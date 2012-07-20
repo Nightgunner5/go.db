@@ -21,6 +21,6 @@ Testimonials
     <zeebo> blazing speed
 
     <Nightgunner5> Well, I think I made my database implementation slightly better: Old 41333680 ns/op New 24179 ns/op
-    <nsf> in that case 100 bytes per action doesn't seem like a big deal
     <nsf> Nightgunner5: :D
+    <nsf> that's like O(n^2) vs O(n)
 
