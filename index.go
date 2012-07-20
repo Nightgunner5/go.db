@@ -253,7 +253,7 @@ func (db *GoDB) IndexUint(field string) {
 	})
 }
 
-func (db *GoDB) HasIndex(field string) {
+func (db *GoDB) HasIndex(field string) bool {
 	db.mtx.RLock()
 	defer db.mtx.RUnlock()
 
