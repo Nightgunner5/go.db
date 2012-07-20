@@ -31,7 +31,7 @@ func (idx *index) insert(key K, value M) {
 		index = (max-min)/2 + min
 	}
 
-	idx.elements = append(idx.elements[:index], append([]index_element{el}, idx.elements[index:]...))
+	idx.elements = append(idx.elements[:index], append([]index_element{el}, idx.elements[index:]...)...)
 }
 
 func (idx *index) remove(key K, value M) {
