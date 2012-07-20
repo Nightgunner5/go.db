@@ -95,30 +95,30 @@ func (idx *index) find(value interface{}) []K {
 }
 
 type index_element_string struct {
-	key     K
-	element string
+	_key     K
+	_element string
 }
 
 var _ index_element = new(index_element_string)
 
 func (idx *index_element_string) key() K {
-	return idx.key
+	return idx._key
 }
 
 func (idx *index_element_string) element() interface{} {
-	return idx.element
+	return idx._element
 }
 
 func (idx *index_element_string) equal(in interface{}) bool {
 	if s, ok := in.(string); ok {
-		return idx.key == s
+		return idx._element == s
 	}
 	return false
 }
 
 func (idx *index_element_string) less(in interface{}) bool {
 	if s, ok := in.(string); ok {
-		return idx.key < s
+		return idx._element < s
 	}
 	return false
 }
