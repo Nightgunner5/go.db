@@ -31,7 +31,7 @@ func (idx *index) insert(key K, value M) {
 		index = (max-min)/2 + min
 	}
 
-	idx.elements = append(idx.elements[:index], el, idx.elements[index:]...)
+	idx.elements = append(idx.elements[:index], append([]index_element{el}, idx.elements[index:]...))
 }
 
 func (idx *index) remove(key K, value M) {
@@ -132,7 +132,7 @@ func (db *GoDB) IndexString(field string) {
 			return &index_element_string{key, value[field].(string)}
 		},
 	}
-	for it := db.GetAll(); it.Valid(); it.Next() {
-		idx.add(it.Key(), it.Value())
+	for it := db.First(); it.Valid(); it.Next() {
+		idx.insert(it.Key(), it.Value())
 	}
 }
