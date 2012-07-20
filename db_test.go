@@ -142,4 +142,3 @@ func BenchmarkStringIndexCreate(b *testing.B) {
 		db.IndexString("a")
 	}
 }
-

@@ -1,12 +1,14 @@
 package godbsql
 
 import (
-	"github.com/Nightgunner5/go.db"
 	"database/sql"
 	"database/sql/driver"
+	"errors"
+	"github.com/Nightgunner5/go.db"
 )
 
 type goDBDriver byte
+
 func init() {
 	sql.Register("godb", goDBDriver(0))
 }
@@ -32,6 +34,5 @@ func (conn *goDBConn) Prepare(query string) (driver.Stmt, error) {
 }
 
 func (conn *goDBConn) Begin() (driver.Tx, error) {
-	panic("TODO")
+	return nil, errors.New("GoDB does not support transactions.")
 }
-
