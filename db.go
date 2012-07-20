@@ -97,7 +97,7 @@ func (db *GoDB) First() Iterator {
 func (db *GoDB) Insert(value M) K {
 	key := K(bplus.InsertAtEnd(db.nodes, db.values, encode(value)))
 
-	for field, idx := range db.indices {
+	for _, idx := range db.indices {
 		idx.insert(key, value)
 	}
 
