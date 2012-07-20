@@ -2,9 +2,13 @@
 //
 // (Spaces are important)
 //
-//     SELECT myField, some_other_field WHERE ID = ?
+//     SELECT ID, some_other_field WHERE myField = ?
+//
+//     INSERT myField, some_other_field
 //
 //     INDEX STRING myField
+//
+// To prevent SQL injection attacks, all values must be parameters. The INSERT query is much simpler than the usual SQL way.
 package godbsql
 
 import (
@@ -12,6 +16,19 @@ import (
 	"errors"
 	"strings"
 )
+
+func parseFields(words []string) (remaining, fields []string) {
+	for i, word := range words {
+		if word[len(word)-1] == ',' {
+			fields = append(fields, string(word[:len(word)-1]))
+		} else {
+			fields = append(fields, word)
+			remaining = words[i+1:]
+			return
+		}
+	}
+	return
+}
 
 func parseQuery(conn *goDBConn, query string) (driver.Stmt, error) {
 	words := strings.Split(query, " ")
@@ -22,12 +39,31 @@ func parseQuery(conn *goDBConn, query string) (driver.Stmt, error) {
 	case "SELECT":
 		return nil, errors.New("TODO")
 	case "INSERT":
-		return nil, errors.New("TODO")
+		words, fields := parseFields(words[1:])
+		if len(words) != 0 {
+			return nil, errors.New("Extra garbage after end of query")
+		}
+		for _, field := range fields {
+			if field == "ID" {
+				return nil, errors.New("ID is not a valid field name for INSERT.")
+			}
+		}
+
+		return &goDBInsertStmt{goDBStmt{conn, len(fields)}, fields}, nil
 	case "INDEX":
 		if len(words) < 3 {
 			return nil, errors.New("Expected type after INDEX")
 		}
-		if words[2] == "ID" {
+		if len(words) > 3 {
+			if words[1] == "SIGNED" || words[1] == "UNSIGNED" {
+				if len(words) != 4 {
+					return nil, errors.New("Extra garbage after end of query")
+				}
+			} else {
+				return nil, errors.New("Extra garbage after end of query")
+			}
+		}
+		if words[2] == "ID" || (len(words) > 3 && words[3] == "ID") {
 			return nil, errors.New("ID cannot be affected by user-supplied indexes.")
 		}
 		switch strings.ToUpper(words[1]) {

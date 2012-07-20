@@ -10,7 +10,6 @@ package godbsql
 import (
 	"database/sql/driver"
 	"errors"
-	"strings"
 )
 
 type goDBIndexStmtString struct {
@@ -58,7 +57,7 @@ type goDBIndexStmtUint struct {
 	field string
 }
 
-func (stmt *goDBIndexStmtYUint) Exec([]driver.Value) (result driver.Result, err error) {
+func (stmt *goDBIndexStmtUint) Exec([]driver.Value) (result driver.Result, err error) {
 	defer func() {
 		if recover() != nil {
 			result = nil

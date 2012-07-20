@@ -252,3 +252,12 @@ func (db *GoDB) IndexUint(field string) {
 		return &index_element_uint{key, val}
 	})
 }
+
+func (db *GoDB) HasIndex(field string) {
+	db.mtx.RLock()
+	defer db.mtx.RUnlock()
+
+	_, ok := db.indices[field]
+
+	return ok
+}
