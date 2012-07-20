@@ -16,7 +16,7 @@ type index_element interface {
 func (idx *index) insert(key K, value M) {
 	el := idx.convert(key, value)
 
-	min, max := 0, len(elements)-1
+	min, max := 0, len(idx.elements)-1
 	index := max / 2
 
 	for min < max {
@@ -37,7 +37,7 @@ func (idx *index) insert(key K, value M) {
 func (idx *index) remove(key K, value M) {
 	el := idx.convert(key, value)
 
-	min, max := 0, len(elements)-1
+	min, max := 0, len(idx.elements)-1
 	index := max / 2
 
 	for min < max {
@@ -66,7 +66,7 @@ func (idx *index) remove(key K, value M) {
 }
 
 func (idx *index) find(value interface{}) []K {
-	min, max := 0, len(elements)-1
+	min, max := 0, len(idx.elements)-1
 	index := max / 2
 
 	for min < max {
@@ -129,7 +129,7 @@ func (db *GoDB) IndexString(field string) {
 		field,
 		nil,
 		func(key K, value M) index_element {
-			return &index_element_string{key, value[field]}
+			return &index_element_string{key, value[field].(string)}
 		},
 	}
 	for it := db.GetAll(); it.Valid(); it.Next() {
